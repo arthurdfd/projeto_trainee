@@ -12,6 +12,13 @@ def carregar_modelo_linear():
 
 modelo_lr = carregar_modelo_linear()
 
+# Carregando as colunas de treino do dataset original
+@st.cache_resource
+def carregar_colunas():
+    return joblib.load("colunas_treino.joblib")
+
+colunas_modelo = carregar_colunas()
+
 # Título principal e descrição do contexto
 st.title("🏠 Simulador de Preços de Imóveis")
 st.markdown("""
@@ -41,26 +48,27 @@ st.markdown("---")
 # Botão principal que dispara a execução do modelo
 if st.button("📊 Estimar Preço de Venda", type="primary"):
     try:
-        # Criando o dicionário estruturado com os dados de input
-        dados_usuario = {
-            'OverallQual': [overall_qual],
-            'GrLivArea': [gr_liv_area],
-            'GarageCars': [garage_cars],
-            'TotalBsmtSF': [total_bsmt_sf],
-            'FullBath': [full_bath],
-            'YearBuilt': [year_built]
-        }
         
-        # Convertendo o dicionário para DF para que o modelo consiga fazer predict
-        df_input = pd.DataFrame(dados_usuario)
+        # Aqui, eu zero todas as colunas. Foi preciso fazer isso pois o modelo
+        # de regressão original foi treinado com todas as colunas do dataset original.
+        # Como eu só utilizo 6 para a predição aqui, é necessário lidar com o restante.
+        dados_zerados = {col: [0] for col in colunas_modelo}
+        df_input = pd.DataFrame(dados_zerados)
         
-        # Executando a Regressão Linear para obter o preço
+        # Substitui apenas as variáveis que são coletadas do usuário
+        df_input['OverallQual'] = overall_qual
+        df_input['GrLivArea'] = gr_liv_area
+        df_input['TotalBsmtSF'] = total_bsmt_sf
+        df_input['GarageCars'] = garage_cars
+        df_input['FullBath'] = full_bath
+        df_input['YearBuilt'] = year_built
+        
+        # Garante que a ordem das colunas esteja idêntica à do treinamento
+        df_input = df_input[colunas_modelo]
+        
+        # Fazendo a predição
         preco_predito = modelo_lr.predict(df_input)[0]
         
-        # Exibindo o resultado formatado 
-        # em dólares
-        st.success("### Resultado da Simulação")
-        st.markdown(f"O valor estimado de mercado para este imóvel é de: **$ {preco_predito:,.2f}**")
-        
+        st.metric("Preço estimado", f"US$ {preco_predito:,.0f}")
     except Exception as e:
-        st.error(f"Erro ao processar a predição. Verifique novamente as variáveis. Detalhe: {e}")
+        st.error(f"Erro ao processar a predição. Detalhe técnico: {e}")

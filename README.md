@@ -22,6 +22,7 @@ O projeto aplica os dois grandes tipos de aprendizado de máquina:
 │   └── sample_submission.csv
 ├── app.py
 ├── modelo_regressao_linear.joblib
+├── colunas_treino.joblib
 ├── requirements.txt
 ├── projeto_final.ipynb
 ├── README.md
