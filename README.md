@@ -14,14 +14,18 @@ O projeto aplica os dois grandes tipos de aprendizado de máquina:
 ## Estrutura do repositório
 
 ```
+.
 ├── data/
-│   ├── train.csv               # Conjunto de treino (features + SalePrice)
-│   ├── test.csv                # Conjunto de teste (sem SalePrice, usado no Kaggle)
-│   ├── data_description.txt    # Dicionário de dados com as 79 colunas explicativas
-│   └── sample_submission.csv   # Formato de submissão exigido pelo Kaggle
-├── projeto_final.ipynb         # Notebook principal com todo o desenvolvimento
-├── .gitignore
-└── README.md
+│   ├── train.csv
+│   ├── test.csv
+│   ├── data_description.txt
+│   └── sample_submission.csv
+├── app.py
+├── modelo_regressao_linear.joblib
+├── requirements.txt
+├── projeto_final.ipynb
+├── README.md
+└── .gitignore
 ```
 
 ## Roteiro do notebook
@@ -49,6 +53,21 @@ O projeto aplica os dois grandes tipos de aprendizado de máquina:
 - **Random Forest** — modelo de ensemble.
 - **Gradient Boosting** — modelo de ensemble, com versão padrão e versão otimizada via GridSearchCV.
 - **KMeans** — segmentação dos imóveis em clusters por perfil físico.
+
+## Como rodar o aplicativo Streamlit
+
+Para executar o simulador de preços interativo localmente, siga os passos abaixo no terminal:
+
+1.  Ative o ambiente virtual (venv):
+-   No Windows (Cmd): venv\Scripts\activate
+-   No Windows (Git Bash): source venv/Scripts/activate
+-   No Linux/macOS: source venv/bin/activate
+
+2.  Certifique-se de ter as dependências instaladas:
+-   pip install -r requirements.txt
+
+3.  Inicie o servidor do Streamlit:
+-   streamlit run app.py
 
 ## Tecnologias utilizadas
 
